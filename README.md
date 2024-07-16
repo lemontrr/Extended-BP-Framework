@@ -38,15 +38,24 @@ mode : Choosing whether to optimize ('opt') or analyze ('anal') [default 'opt']
 
 ## Usage Examples
 Run the command below.
->python main.py opt 
+>python main.py opt
+>
 >python main.py opt -f AES_depth16
+>
 >python main.py opt -f AES_depth16 -M 12 -A BPD -H 15
+>
 >python main.py opt -n 5 -m 5 -f Ascon
+>
 >python main.py opt -n 5 -m 5 -f Ascon -M 4 -A BPD -H 5 -R
+>
 >python main.py opt -n 16 -m 16 -f Saturnin -M 8 -A RNBP
+>
 >python main.py anal -AR AES_32ANDs_BPD_best_23D_6AD_32NLs_82XORs
+>
 >python main.py anal -ALD log_example
+>
 >python main.py anal -ALI log_example
+>
 
 ## Files Generated
 **In 'code_results' folder** : result python file
