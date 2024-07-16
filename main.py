@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
     parser.add_argument("mode",help="Choosing whether to optimize ('opt') or analyze ('anal') (default 'opt')",type=str,default='opt')
 
-    parser.add_argument("-f", "--filename",help="Circuit to optimize (default 'Imp_32ANDs')",type=str,default='Imp_32ANDs')
+    parser.add_argument("-f", "--filename",help="Circuit to optimize (default 'AES_32ANDs')",type=str,default='AES_32ANDs')
     parser.add_argument("-n", "--insize",help="Input size of the S-box (default 8)",type=int,default=8)
     parser.add_argument("-m", "--outsize",help="Output size of the S-box (default 8)",type=int,default=8)
     parser.add_argument("-M", "--multi",help="The number of cores for multi threading (default 1)",type = int,default=1)
