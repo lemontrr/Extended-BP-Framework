@@ -12,7 +12,7 @@ For details, please follow the file format already in the 'code_target_imps' fol
 ## Options
 mode : Choosing whether to optimize ('opt') or analyze ('anal') [default 'opt']
 
-**-f** : Circuit filename to optimize (except '.py') [default : 'Imp_32ANDs']
+**-f** : Circuit filename to optimize (except '.py') [default : 'AES_32ANDs']
 
 **-n** : Input size of the S-box [default : 8]
 
