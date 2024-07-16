@@ -13,16 +13,28 @@ For details, please follow the file format already in the 'code_target_imps' fol
 mode : Choosing whether to optimize ('opt') or analyze ('anal') [default 'opt']
 
 **-f** : Circuit filename to optimize (except '.py') [default : 'Imp_32ANDs']
+
 **-n** : Input size of the S-box [default : 8]
+
 **-m** : Output size of the S-box [default : 8]
+
 **-M** : The number of cores for multi threading (if 1, single core) [default : 1]
+
 **-A** : BP based algorithm to be incorporated ('RNBP' or 'BPD') [default : 'RNBP']
+
 **-H** : The depth limit [default : 23]
+
 **-R** : Random circuit mofidication mode (True or False) [default : False]
 
+
+
 **--AR** : Result filename to analyze performance (except '.py')
+
 **--ALD** : Log filename to analyze changes in Dist (except '.txt')
+
 **--ALI** : Log filename to analyze many informations (except '.txt')
+
+
 
 ## Usage Examples
 Run the command below.
@@ -38,8 +50,12 @@ Run the command below.
 
 ## Files Generated
 **In 'code_results' folder** : result python file
+
 **In 'code_formal' folder** : temporary Python file to extract XOR information
+
 **In 'log' folder** : log file recording the optimization process
+
+
 
 ## Points for Analyzing the Results
 Using the 'anal -AR' option the following measures are analyzed: depth (with NOTs), depth, AND-depth, ANDs, ORs, XORs, NOTs.
