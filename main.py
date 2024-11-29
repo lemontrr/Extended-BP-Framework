@@ -10,6 +10,34 @@ import Code_spac_analysis
 import time
 import argparse
 import log_reader
+import os
+
+def Read_sizes(filename):
+    with open(filename,'r') as fp:
+        lines = fp.read().split('################### Here is your code !! ###################')[1].split('\n')
+    all_Vars = set()
+    for line in lines:
+        line = line.replace(' ','').replace(';','')
+        if '#' in line[:3]: continue
+        if '=' not in line: continue
+        if line.count('=') > 1: continue
+        # print(line)
+        C,AB = line.split('=') 
+        all_Vars.add(C.replace('^','').replace('&','').replace('|',''))
+        if '&' in AB: all_Vars.update(AB.split('&'))
+        elif '|' in AB: all_Vars.update(AB.split('|'))
+        elif '^' in AB: all_Vars.update(AB.split('^'))
+    n = 0
+    for i in range(100,-1,-1):
+        if f'x[{i}]' in all_Vars:
+            n = i+1
+            break
+    m = 0
+    for i in range(100,-1,-1):
+        if f'y[{i}]' in all_Vars:
+            m = i+1
+            break
+    return n,m
 
 def optimizer_with_BPD(n,m,XORs,NLs,NOTs,filename,pc_name,H):
     st = time.time()
@@ -61,65 +89,67 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description=descript)
 
-    parser.add_argument("mode",help="Choosing whether to optimize ('opt') or analyze ('anal') (default 'opt')",type=str,default='opt')
-
     parser.add_argument("-f", "--filename",help="Circuit to optimize (default 'AES_32ANDs')",type=str,default='AES_32ANDs')
-    parser.add_argument("-n", "--insize",help="Input size of the S-box (default 8)",type=int,default=8)
-    parser.add_argument("-m", "--outsize",help="Output size of the S-box (default 8)",type=int,default=8)
-    parser.add_argument("-M", "--multi",help="The number of cores for multi threading (default 1)",type = int,default=1)
-    parser.add_argument("-A", "--algorithm",help="BP based algorithm to be incorporated (default 'RNBP')",type=str,default='RNBP')
-    parser.add_argument("-H", "--depth_limit",help="The depth limit (default : 23)",type = int,default=23)
-    parser.add_argument("-R", "--random",help="Random circuit mofidication mode (default : False)",type = bool,default=False)
+    parser.add_argument("-m", "--multi",help="The number of cores for multi threading (default 1)",type = int,default=1)
+    parser.add_argument("-a", "--algorithm",help="BP based algorithm to be incorporated (default 'RNBP')",type=str,default='RNBP')
+    parser.add_argument("-H","-d", "--depth_limit",help="The depth limit (default : 23)",type = int,default=23)
+    parser.add_argument("-r", "--random",help="Random circuit mofidication mode (default : False)",type = bool,default=False)
 
-    parser.add_argument("-AR", "--anal_result",help="Result filename to analyze performance",type=str,default='')
-    parser.add_argument("-ALD", "--anal_log_Dist",help="Log filename to analyze changes in Dist",type=str,default='')
-    parser.add_argument("-ALI", "--anal_log_I",help="Log filename to analyze many informations",type=str,default='')
-    
+    subparser = parser.add_subparsers(dest="command", help="Available commands")
+    anal_parser = subparser.add_parser("analyze", help="Analyze the data")
+        
     args = parser.parse_args()
 
-    if args.mode == 'opt':
+    if args.command == "analyze":
+        filenames = os.listdir('./code_results')
+        text = ''
+        for filename in filenames:
+            if filename == 'CODE_RESULTS.txt': continue
+            n,m = Read_sizes('./code_results/'+filename)
+            DN,D,AD,ANDs,ORs,XORs,NOTs = Code_spac_analysis.check_implementation_spec_in_results(filename,n,m)
+            text += f'Performance of {filename[:-3]} ::: depth(wtih NOTs) : {DN} / depth : {D} / AND-depth : {AD} / ANDs : {ANDs} / ORs : {ORs} / XORs : {XORs} / NOTs : {NOTs}\n'
+        with open('./code_results/CODE_RESULTS.txt','w') as fp:
+            fp.write(text)
+
+        if not os.path.exists('./log/view_Dist'): os.makedirs('./log/view_Dist')
+        if not os.path.exists('./log/view_all_Info'): os.makedirs('./log/view_all_Info')
+        filenames = os.listdir('./log')
+        for filename in filenames:
+            if '.txt' not in filename: continue
+            text = log_reader.anal_Dist(filename[:-4])
+            with open('./log/view_Dist/'+filename[:-4]+'.txt','w') as fp: fp.write(text)
+            text = log_reader.anal_Informations(filename[:-4])
+            with open('./log/view_all_Info/'+filename[:-4]+'.txt','w') as fp: fp.write(text)
+
+    else:
+        n,m = Read_sizes('./code_target_imps/'+args.filename+'.py')
         if args.multi == 1:           multi_proc = 'a single core'
         else:                         multi_proc = f'{args.multi} multi cores'
         if args.algorithm == 'RNBP':  algorithm = 'RNBP'
         elif args.algorithm == 'BPD': algorithm = f'BPD (H = {args.depth_limit})'
         if args.random == True:       modify = ' with randomly modificatons'
         elif args.random == False:    modify = ''
-        print(f'I will optimize {args.filename} ({args.insize}-bit -> {args.outsize}-bit) on {multi_proc} using {algorithm}' + modify)
+        print(f'I will optimize {args.filename} ({n}-bit -> {m}-bit) on {multi_proc} using {algorithm}' + modify)
 
-        Change_Circuit_Formal.circuit_formal(args.insize,args.outsize,args.filename)
-        XORs,NLs,NOTs = Extract_XOR_information.extract_XOR_NOTs(args.insize,args.outsize,args.filename)
+        Change_Circuit_Formal.circuit_formal(n,m,args.filename)
+        XORs,NLs,NOTs = Extract_XOR_information.extract_XOR_NOTs(n,m,args.filename)
         if args.multi == 1:
             if (args.algorithm == 'RNBP') and (args.random == False): 
-                optimizer_with_RNBP(args.insize,args.outsize,XORs,NLs,NOTs,args.filename,'single')
+                optimizer_with_RNBP(n,m,XORs,NLs,NOTs,args.filename,'single')
             elif (args.algorithm == 'RNBP') and (args.random == True): 
-                optimizer_with_RNBP_for_modified_circuit(args.insize,args.outsize,XORs,NLs,NOTs,args.filename,'single')
+                optimizer_with_RNBP_for_modified_circuit(n,m,XORs,NLs,NOTs,args.filename,'single')
             elif (args.algorithm == 'BPD') and (args.random == False): 
-                optimizer_with_BPD(args.insize,args.outsize,XORs,NLs,NOTs,args.filename,'single',args.depth_limit)
+                optimizer_with_BPD(n,m,XORs,NLs,NOTs,args.filename,'single',args.depth_limit)
             elif (args.algorithm == 'BPD') and (args.random == True):
-                optimizer_with_BPD_for_modified_circuit(args.insize,args.outsize,XORs,NLs,NOTs,args.filename,'single',args.depth_limit)
+                optimizer_with_BPD_for_modified_circuit(n,m,XORs,NLs,NOTs,args.filename,'single',args.depth_limit)
         elif args.multi > 1:
             p = Pool(args.multi); ret = [0]*args.multi
             if (args.algorithm == 'RNBP') and (args.random == False): 
-                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_RNBP,[args.insize,args.outsize,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}'])
+                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_RNBP,[n,m,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}'])
             elif (args.algorithm == 'RNBP') and (args.random == True): 
-                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_RNBP_for_modified_circuit,[args.insize,args.outsize,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}'])
+                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_RNBP_for_modified_circuit,[n,m,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}'])
             elif (args.algorithm == 'BPD') and (args.random == False): 
-                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_BPD,[args.insize,args.outsize,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}'],args.depth_limit)
+                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_BPD,[n,m,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}',args.depth_limit])
             elif (args.algorithm == 'BPD') and (args.random == True):
-                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_BPD_for_modified_circuit,[args.insize,args.outsize,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}'],args.depth_limit)
+                for pc_cnt in range(args.multi): ret[pc_cnt] = p.apply_async(optimizer_with_BPD_for_modified_circuit,[n,m,XORs,NLs,NOTs,args.filename,f'core{pc_cnt:02d}',args.depth_limit])
             [r.get() for r in ret]; p.close(); p.join()
-
-    elif args.mode == 'anal':
-        if (args.anal_result != '') + (args.anal_log_Dist != '') + (args.anal_log_I != '') > 1:
-            print('Please use only one option among AR, ALD, and ALS.')
-        elif args.anal_result != '':
-            print(args.anal_result)
-            DN,D,AD,ANDs,ORs,XORs,NOTs = Code_spac_analysis.check_implementation_spec_in_results(args.anal_result+'.py',args.insize,args.outsize)
-            print(f'Performance of {args.anal_result} ::: depth(wtih NOTs) : {DN} / depth : {D} / AND-depth : {AD} / ANDs : {ANDs} / ORs : {ORs} / XORs : {XORs} / NOTs : {NOTs}')
-        elif args.anal_log_Dist != '':
-            log_reader.anal_Dist(args.anal_log_Dist)
-        elif args.anal_log_I != '':
-            log_reader.anal_Informations(args.anal_log_I)
-    else:
-        print("You entered the mode incorrectly. (Only 'opt' or 'anal' are possible.)")
-    
