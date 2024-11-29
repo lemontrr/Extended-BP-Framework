@@ -15,7 +15,6 @@ def read_log(log_filename):
         else:
             info.append(readlines[i])
     infos.append(info)
-
     if 'RNBP' in log_filename:
         n = eval(infos[0][0].split(' : ')[1])
         m = eval(infos[0][1].split(' : ')[1])
@@ -61,7 +60,12 @@ def read_log(log_filename):
         status[name_tag] = [Sname[:],S[:],D[:],Dist[:]]
     name_tags = list(status.keys())
 
-    Circuit = eval(infos[-1][1].split(' : ')[1])
+    # print(log_filename)
+    # print(infos[-1])
+    if len(infos[-1]) > 0 :
+        Circuit = eval(infos[-1][1].split(' : ')[1])
+    else:
+        Circuit = []
 
     return n,m,name_tags,XORs,Y,HY,status,Circuit
 
@@ -69,21 +73,26 @@ def print_imp(stat,Y,Circuit):
     Sname,S,D,Dist = stat
     NLs,NOTs,k = extract_NLs_NOTs(Circuit)
     n = len([_ for _ in Sname if 'x' in _])
-    XORs = 1
+    XORs = 1; text = ''
+    if Circuit == []: return ''
     for _ in range(n,len(S)):
         if bin(S[_]).count('1')>1:
             for i in range(_):
                 for j in range(i+1,_):
                     if S[i]^S[j] == S[_]:
                         if max(D[i],D[j])+1 == D[_]:
-                            print(f'{Sname[_]} = {Sname[i]} + {Sname[j]} (depth : {D[_]} = {D[i]} + {D[j]}) - {XORs}th XOR'); XORs += 1
+                            # print(f'{Sname[_]} = {Sname[i]} + {Sname[j]} (depth : {D[_]} = {D[i]} + {D[j]}) - {XORs}th XOR'); XORs += 1
+                            text += f'{Sname[_]} = {Sname[i]} + {Sname[j]} (depth : {D[_]} = {D[i]} + {D[j]}) - {XORs}th XOR\n'; XORs += 1
         else:
+
             i = int(math.log2(S[_]))-n
-            print(f'{Sname[_]} = {Sname[S.index(Y[2*i])]} {NLs[i]} {Sname[S.index(Y[2*i+1])]} (depth : {D[_]} = {D[S.index(Y[2*i])]} {NLs[i]} {D[S.index(Y[2*i+1])]})')
+            text += f'{Sname[_]} = {Sname[S.index(Y[2*i])]} {NLs[i]} {Sname[S.index(Y[2*i+1])]} (depth : {D[_]} = {D[S.index(Y[2*i])]} {NLs[i]} {D[S.index(Y[2*i+1])]})\n'
+            # print(f'{Sname[_]} = {Sname[S.index(Y[2*i])]} {NLs[i]} {Sname[S.index(Y[2*i+1])]} (depth : {D[_]} = {D[S.index(Y[2*i])]} {NLs[i]} {D[S.index(Y[2*i+1])]})')
+    return text
 
 def print_only_Dists(status):
     name_tags = list(status.keys())
-    bef_tag = 0
+    bef_tag = 0; all_text = ''
     for name_tag in name_tags:
         Sname,S,D,Dist = status[name_tag]
         if name_tag == len([_ for _ in Sname if 'x' in _]):
@@ -105,8 +114,10 @@ def print_only_Dists(status):
                 if Dist[i] == 999:       text += f'?'
                 elif Dist[i] == 0:         text += f'_'
                 else:                      text += f'{Dist[i]}'
-        print(text)
+        all_text += text + '\n'
+        # print(text)
         bef_Dist = Dist[:]
+    return all_text
 
 def extract_NLs_NOTs(Circuit):
     NLs_dict = dict()
@@ -124,28 +135,33 @@ def extract_NLs_NOTs(Circuit):
     for i in range(k):
         NLs.append(NLs_dict[i])
     return NLs,NOTs,k
-
+ 
 def anal_Dist(log_filename):
     n,m,tags,XORs,Y,HY,status,Circuit = read_log(log_filename)
-    print_only_Dists(status)
+    return print_only_Dists(status)
 
 def anal_Informations(log_filename):
     n,m,tags,XORs,Y,HY,status,Circuit = read_log(log_filename)
     Sname,S,D,Dist = status[tags[-1]]
     NLs,NOTs,k = extract_NLs_NOTs(Circuit)
-    print(f'n = {n}')
-    print(f'm = {m}')
-    print(f'k = {k}')
+    text = ''
+    text += f'n = {n}\n'
+    text += f'm = {m}\n'
+    text += f'k = {k}\n'
     if 'RNBP' not in log_filename:
-        print(f'H = {max(D)}')
-    print(f'Sname = {Sname}')
-    print(f'S = {S}')
-    print(f'D = {D}')
-    print(f'Y = {Y}')
+        text += f'H = {max(D)}\n'
+    text += f'Sname = {Sname}\n'
+    text += f'S = {S}\n'
+    text += f'D = {D}\n'
+    text += f'Y = {Y}\n'
     if 'RNBP' not in log_filename:
-        print(f'HY = {HY}')
-    print(f'NLs = {NLs}')
-    print(f'NOTs = {NOTs}')
-    print('')
-    print('Circuit')
-    print_imp(status[tags[-1]],Y,Circuit)
+        text += f'HY = {HY}\n'
+    text += f'NLs = {NLs}\n'
+    text += f'NOTs = {NOTs}\n'
+    text += '\n'
+    if Circuit == []:
+        text += 'No Circuit\n'
+    else:
+        text += 'Circuit\n'
+        text += print_imp(status[tags[-1]],Y,Circuit)
+    return text
