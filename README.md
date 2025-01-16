@@ -79,6 +79,12 @@ The **log** directory includes log files recording the optimization process.
 The **log/view_Dist** directory includes log files that record changes to *Dist*.  
 The **log/view_all_Info** directory includes log files containing information other than *Dist*.  
 
+## Notes on the Resulting Circuit Files
+When this tool runs to optimize the circuit, a file or files are generated in **core_results**.
+The file name is written in the order of [original file name], [RNBP or limited depth], [number of XOR gates], [core name], and [time].
+For example, if you run ```python main.py -f Ascon -a BPD -H 5```, a file called **core_results/Ascon_5H_11XORs_single_0s.py** is generated.
+The optimized circuit is written in Python format in the generated file(s).
+
 ## Notes on Analyzing the Results
 Using the **analyze** option, in **code_results/CODE_RESULTS.txt**, the following metrics are analyzed: depth (with NOTs), depth (without NOTs), AND-depth, ANDs, ORs, XORs, and NOTs.
 When all NOT gates are combined into an XNOR gate, the latency of the circuit follows *depth (without NOTs)* rather than *depth (with NOTs)*.
