@@ -1,5 +1,9 @@
 # Extended-BP-Framework
-This paper provides guidance on using a tool for optimizing S-box circuits while preserving nonlinear gates and AND-depth.
+This text provides guidance on using a tool is developed in *A Framework for Generating S-Box Circuits with Boyar–Peralta Algorithm-Based Heuristics, and Its Applications to AES, SNOW3G, and Saturnin*, a paper accepted to CHES 2025. 
+(Paper URL : https://tches.iacr.org/index.php/TCHES/article/view/11940/11800)
+This tool optimizes the number of XOR gates and depth in S-box circuits by using algorithms that extends BPD and RNBP, which are algorithms for optimizing circuits of linear layers.
+So, RNBP option optimizes only the number of XOR gates, while BPD option optimizes the number of XOR gates within a depth specified by the user.
+The tool preserves nonlinear gates and AND-depth.
 
 ## Options of main.py
 **-h** : Show the help message and exit.  
