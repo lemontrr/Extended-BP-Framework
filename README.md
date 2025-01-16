@@ -90,11 +90,11 @@ Using the **analyze** option, in **code_results/CODE_RESULTS.txt**, the followin
 When all NOT gates are combined into an XNOR gate, the latency of the circuit follows *depth (without NOTs)* rather than *depth (with NOTs)*.
 
 ## Running Time
-Our multi-threading option does not improve the speed of one search, but it enables multiple searches to run concurrently. The time taken for one search for each circuit is as follows:  
-Ascon S-box : Less than 1s  
-AES S-box : 3h - 20h  
-Saturnin super S-box : About a week  
-A part of SNOW3G S-box : 12h - a day (when applying the technique to reduce the size of ```W``` as written in the paper)  
+Our multi-threading option does not improve the speed of one search, but it enables multiple searches to run concurrently. The following shows the time taken for one search per circuit with the AMD Ryzen 9 7950X:  
+Ascon S-box : Less than 1s,  
+AES S-box : 3h - 20h,  
+Saturnin super S-box : About a week,  
+A part of SNOW3G S-box : 12h - a day (when applying the technique to reduce the size of ```W``` as written in the paper.)  
 
 ## References
 [BP10] Joan Boyar and René Peralta. A new combinational logic minimization technique with applications to cryptology. In Paola Festa, editor, Experimental Algorithms, 9th International Symposium, SEA 2010, Ischia Island, Naples, Italy, May 20-22, 2010. Proceedings, volume 6049 of Lecture Notes in Computer Science, pages 178–189. Springer, 2010.  
