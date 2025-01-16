@@ -5,6 +5,8 @@ This tool optimizes the number of XOR gates and depth in S-box circuits by using
 So, RNBP option optimizes only the number of XOR gates, while BPD option optimizes the number of XOR gates within a depth specified by the user.
 The tool preserves nonlinear gates and AND-depth.
 
+This tool includes the results (for AES, SNOW3G, and Saturnin) presented in the paper and the Ascon S-box circuit for quick testing.
+
 ## Options of main.py
 **-h** : Show the help message and exit.  
 **search** : Search for optimized circuits. (default)  
@@ -85,8 +87,8 @@ When all NOT gates are combined into an XNOR gate, the latency of the circuit fo
 Our multi-threading option does not improve the speed of one search, but it enables multiple searches to run concurrently. The time taken for one search for each circuit is as follows:  
 Ascon S-box : Less than 1s  
 AES S-box : 3h - 20h  
-A part of SNOW3G S-box : 12h - a day  
 Saturnin super S-box : About a week  
+A part of SNOW3G S-box : 12h - a day (when applying the technique to reduce the size of ```W``` as written in the paper)  
 
 ## References
 [BP10] Joan Boyar and René Peralta. A new combinational logic minimization technique with applications to cryptology. In Paola Festa, editor, Experimental Algorithms, 9th International Symposium, SEA 2010, Ischia Island, Naples, Italy, May 20-22, 2010. Proceedings, volume 6049 of Lecture Notes in Computer Science, pages 178–189. Springer, 2010.  
