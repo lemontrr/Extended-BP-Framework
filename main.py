@@ -57,8 +57,7 @@ def optimizer_with_BPD(n, m, XORs, NLs, NOTs, filename, pc_name, H):
 
     add_on_name = f'_{H}H_{XORnum}XORs_{pc_name}_{int(time.time()-st)}s'
     Write_Circuit.Write_Circuit(filename, add_on_name, circuit)
-    print(f'Write {filename} (H = {H}) by using {XORnum}XORs in {
-          pc_name} (time : {time.time()-st:.2f}s)')
+    print(f'Write {filename} (H = {H}) by using {XORnum}XORs in {pc_name} (time : {time.time()-st:.2f}s)')
     return 1
 
 
@@ -73,8 +72,7 @@ def optimizer_with_BPD_for_modified_circuit(n, m, XORs, NLs, NOTs, filename, pc_
 
     add_on_name = f'_{H}H_{XORnum}XORs_{pc_name}_{int(time.time()-st)}s'
     Write_Circuit.Write_Circuit(filename, add_on_name, circuit)
-    print(f'Write {filename} (H = {H}) by using {XORnum}XORs in {
-          pc_name} (time : {time.time()-st:.2f}s)')
+    print(f'Write {filename} (H = {H}) by using {XORnum}XORs in {pc_name} (time : {time.time()-st:.2f}s)')
     return 1
 
 
@@ -86,8 +84,7 @@ def optimizer_with_RNBP(n, m, XORs, NLs, NOTs, filename, pc_name):
 
     add_on_name = f'_RNBP_{XORnum}XORs_{pc_name}_{int(time.time()-st)}s'
     Write_Circuit.Write_Circuit(filename, add_on_name, circuit)
-    print(f'Write {filename} by using {XORnum}XORs in {
-          pc_name} (time : {time.time()-st:.2f}s)')
+    print(f'Write {filename} by using {XORnum}XORs in {pc_name} (time : {time.time()-st:.2f}s)')
     return 1
 
 
@@ -102,8 +99,7 @@ def optimizer_with_RNBP_for_modified_circuit(n, m, XORs, NLs, NOTs, filename, pc
 
     add_on_name = f'_RNBP_{XORnum}XORs_{pc_name}_{int(time.time()-st)}s'
     Write_Circuit.Write_Circuit(filename, add_on_name, circuit)
-    print(f'Write {filename} by using {XORnum}XORs in {
-          pc_name} (time : {time.time()-st:.2f}s)')
+    print(f'Write {filename} by using {XORnum}XORs in {pc_name} (time : {time.time()-st:.2f}s)')
     return 1
 
 
