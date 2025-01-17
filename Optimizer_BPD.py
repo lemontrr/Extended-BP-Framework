@@ -464,8 +464,7 @@ def make_Circuit(n, m, k, S, D, Y, NLs, NOTs):
                 for i1 in range(i0+1, i):
                     if b == S[i0] ^ S[i1]:
                         if D[i] == max(D[i0], D[i1])+1:
-                            Circuit.append(f'{B_match[b]}={B_match[S[i0]]}^{
-                                           B_match[S[i1]]}')
+                            Circuit.append(f'{B_match[b]}={B_match[S[i0]]}^{B_match[S[i1]]}')
                             Fin = True
                             break
                 if Fin:
