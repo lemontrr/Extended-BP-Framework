@@ -89,14 +89,12 @@ def print_imp(stat, Y, Circuit):
                     if S[i] ^ S[j] == S[_]:
                         if max(D[i], D[j])+1 == D[_]:
                             # print(f'{Sname[_]} = {Sname[i]} + {Sname[j]} (depth : {D[_]} = {D[i]} + {D[j]}) - {XORs}th XOR'); XORs += 1
-                            text += f'{Sname[_]} = {Sname[i]} + {Sname[j]
-                                                                 } (depth : {D[_]} = {D[i]} + {D[j]}) - {XORs}th XOR\n'
+                            text += f'{Sname[_]} = {Sname[i]} + {Sname[j]} (depth : {D[_]} = {D[i]} + {D[j]}) - {XORs}th XOR\n'
                             XORs += 1
         else:
 
             i = int(math.log2(S[_]))-n
-            text += f'{Sname[_]} = {Sname[S.index(Y[2*i])]} {NLs[i]} {Sname[S.index(
-                Y[2*i+1])]} (depth : {D[_]} = {D[S.index(Y[2*i])]} {NLs[i]} {D[S.index(Y[2*i+1])]})\n'
+            text += f'{Sname[_]} = {Sname[S.index(Y[2*i])]} {NLs[i]} {Sname[S.index(Y[2*i+1])]} (depth : {D[_]} = {D[S.index(Y[2*i])]} {NLs[i]} {D[S.index(Y[2*i+1])]})\n'
             # print(f'{Sname[_]} = {Sname[S.index(Y[2*i])]} {NLs[i]} {Sname[S.index(Y[2*i+1])]} (depth : {D[_]} = {D[S.index(Y[2*i])]} {NLs[i]} {D[S.index(Y[2*i+1])]})')
     return text
 
