@@ -345,8 +345,7 @@ def make_Circuit(n, m, k, S, Y, NLs, NOTs):
             for i0 in range(i):
                 for i1 in range(i0+1, i):
                     if b == S[i0] ^ S[i1]:
-                        Circuit.append(f'{B_match[b]}={B_match[S[i0]]}^{
-                                       B_match[S[i1]]}')
+                        Circuit.append(f'{B_match[b]}={B_match[S[i0]]}^{B_match[S[i1]]}')
                         Fin = True
                         break
                 if Fin:
