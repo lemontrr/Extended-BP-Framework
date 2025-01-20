@@ -173,8 +173,7 @@ if __name__ == '__main__':
             modify = ' with randomly modificatons'
         elif args.random == False:
             modify = ''
-        print(f'I will optimize {args.filename} ({
-              n}-bit -> {m}-bit) on {multi_proc} using {algorithm}' + modify)
+        print(f'I will optimize {args.filename} ({n}-bit -> {m}-bit) on {multi_proc} using {algorithm}' + modify)
 
         Change_Circuit_Formal.circuit_formal(n, m, args.filename)
         XORs, NLs, NOTs = Extract_XOR_information.extract_XOR_NOTs(
