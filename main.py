@@ -36,6 +36,8 @@ def Read_sizes(filename):
             all_Vars.update(AB.split('|'))
         elif '^' in AB:
             all_Vars.update(AB.split('^'))
+        else:
+            all_Vars.add(AB)
     n = 0
     for i in range(100, -1, -1):
         if f'x[{i}]' in all_Vars:
@@ -213,3 +215,4 @@ if __name__ == '__main__':
             [r.get() for r in ret]
             p.close()
             p.join()
+
